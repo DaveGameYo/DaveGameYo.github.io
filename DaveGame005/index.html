@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)http://www.darkthread.net/miniajaxlab/html5canvas/canvas1.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Dave005 幫Dave 化妝吧 !!</title>
+    <script src="./libs/jquery-1.6.4.js">
+    </script>
+    <style>
+        body,input { font-size: 9pt; }
+        #dCanvas,#dLine { clear: both; }
+        .option
+        {
+            float: left; width: 20px; height: 20px; border: 2px solid #cccccc;
+            margin-right: 4px; margin-bottom: 4px;
+        }
+        .active { border: 2px solid black; }
+        .lw { text-align: center; vertical-align: middle; }
+        img.output { border: 1px solid green; }
+        #cSketchPad { cursor: arrow; }
+    </style>
+    <script>
+        $(function () {
+            var $canvas = $("#cSketchPad");
+            var cxt = $canvas[0].getContext("2d");
+            /*
+            //方法一：存在部分不兼容
+            var img = document.getElementById("img");
+            function drawImg(){
+                cxt.drawImage(img,0,0,can.width,can.height);
+            }
+            */
+ 
+            //方法二:
+            var imgs = new Image();
+            imgs.src = "dave.jpg";
+            imgs.onload = drawImg;//图片加载完成再执行
+            function drawImg(){
+                cxt.drawImage(imgs,0,0, 300, 300);
+            }
+
+
+            //產生不同顏色的div方格當作調色盤選項
+            var colors =
+            "red;orange;yellow;green;blue;indigo;purple;black;white".split(';');
+            var sb = [];
+            $.each(colors, function (i, v) {
+                sb.push("<div class='option' style='background-color:" + v + "'></div>");
+            });
+            $("#dPallete").html(sb.join("\n"));
+            //產生不同尺寸的方格當作線條粗細選項
+            sb = [];
+            for (var i = 1; i <= 9; i++)
+                sb.push("<div class='option lw'>" +
+         "<div style='margin-top:#px;margin-left:#px;width:%px;height:%px'></div></div>"
+                .replace(/%/g, i).replace(/#/g, 10 - i / 2));
+            $("#dLine").html(sb.join('\n'));
+            var $clrs = $("#dPallete .option");
+            var $lws = $("#dLine .option");
+            //點選調色盤時切換焦點並取得顏色存入p_color，
+            //同時變更線條粗細選項的方格的顏色
+            $clrs.click(function () {
+                $clrs.removeClass("active");
+                $(this).addClass("active");
+                p_color = this.style.backgroundColor;
+                $lws.children("div").css("background-color", p_color);
+            }).first().click();
+            //點選線條粗細選項時切換焦點並取得寬度存入p_width
+            $lws.click(function () {
+                $lws.removeClass("active");
+                $(this).addClass("active");
+                p_width =
+                    $(this).children("div").css("width").replace("px", "");
+
+            }).eq(3).click();
+            //取得canvas context
+            var $canvas = $("#cSketchPad");
+            var ctx = $canvas[0].getContext("2d");
+            ctx.lineCap = "round";
+            ctx.fillStyle = "white"; //整個canvas塗上白色背景避免PNG的透明底色效果
+            ctx.fillRect(0, 0, $canvas.width(), $canvas.height());
+            var drawMode = false;
+            //canvas點選、移動、放開按鍵事件時進行繪圖動作
+            $canvas.mousedown(function (e) {
+                ctx.beginPath();
+                ctx.strokeStyle = p_color;
+                ctx.lineWidth = p_width;
+                ctx.moveTo(e.pageX - $canvas.position().left, e.pageY - $canvas.position().top);
+                drawMode = true;
+            })
+            .mousemove(function (e) {
+                if (drawMode) {
+                    ctx.lineTo(e.pageX - $canvas.position().left, e.pageY - $canvas.position().top);
+                    ctx.stroke();
+                }
+            })
+            .mouseup(function (e) {
+                drawMode = false;
+            });
+            //利用.toDataqURL()將繪圖結果轉成圖檔
+            $("#bGenImage").click(function () {
+                window.location.reload()
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Dave005 幫Dave 化妝吧 !!</h1>
+<div id="dPallete"><div class="option active" style="background-color:red"></div>
+<div class="option" style="background-color:orange"></div>
+<div class="option" style="background-color:yellow"></div>
+<div class="option" style="background-color:green"></div>
+<div class="option" style="background-color:blue"></div>
+<div class="option" style="background-color:indigo"></div>
+<div class="option" style="background-color:purple"></div>
+<div class="option" style="background-color:black"></div>
+<div class="option" style="background-color:white"></div></div>
+<div id="dLine"><div class="option lw"><div style="margin-top: 9.5px; margin-left: 9.5px; width: 1px; height: 1px; background-color: red;"></div></div>
+<div class="option lw"><div style="margin-top: 9px; margin-left: 9px; width: 2px; height: 2px; background-color: red;"></div></div>
+<div class="option lw"><div style="margin-top: 8.5px; margin-left: 8.5px; width: 3px; height: 3px; background-color: red;"></div></div>
+<div class="option lw active"><div style="margin-top: 8px; margin-left: 8px; width: 4px; height: 4px; background-color: red;"></div></div>
+<div class="option lw"><div style="margin-top: 7.5px; margin-left: 7.5px; width: 5px; height: 5px; background-color: red;"></div></div>
+<div class="option lw"><div style="margin-top: 7px; margin-left: 7px; width: 6px; height: 6px; background-color: red;"></div></div>
+<div class="option lw"><div style="margin-top: 6.5px; margin-left: 6.5px; width: 7px; height: 7px; background-color: red;"></div></div>
+<div class="option lw"><div style="margin-top: 6px; margin-left: 6px; width: 8px; height: 8px; background-color: red;"></div></div>
+<div class="option lw"><div style="margin-top: 5.5px; margin-left: 5.5px; width: 9px; height: 9px; background-color: red;"></div></div></div>
+<div id="dCanvas" >
+<canvas id="cSketchPad" width="300" height="300" style="border: 2px solid gray; position: relative; background:rgba(255,255,255,0)">
+
+</canvas></div>
+<input type="button" id="bGenImage" value="重置">
+<div id="dOutput" style="border: 2px solid gray; ></div>
+
+
+</body></html>
