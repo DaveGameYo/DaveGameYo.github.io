@@ -34,7 +34,7 @@
             imgs.src = "dave.jpg";
             imgs.onload = drawImg;//图片加载完成再执行
             function drawImg(){
-                cxt.drawImage(imgs,0,0, 600, 600);
+                cxt.drawImage(imgs,0,0, 640, 640);
             }
 
 
@@ -126,7 +126,7 @@
 <div class="option lw"><div style="margin-top: 6px; margin-left: 6px; width: 8px; height: 8px; background-color: red;"></div></div>
 <div class="option lw"><div style="margin-top: 5.5px; margin-left: 5.5px; width: 9px; height: 9px; background-color: red;"></div></div></div>
 <div id="dCanvas" >
-<canvas id="cSketchPad" width="600px" height="600px" style="border: 2px solid gray; position: relative; background:rgba(255,255,255,0)">
+<canvas id="cSketchPad" width="640px" height="640px" style="border: 2px solid gray; position: relative; background:rgba(255,255,255,0)">
 
 </canvas></div>
 <script>
@@ -150,7 +150,10 @@
                         console.log('happy ', img.width, ' ', img.height)
                         $canvas.width = img.width
                         $canvas.height = img.height
-                        cxt.clearRect(0, 0, $canvas.width, $canvas.height);
+                        cxt.fillStyle="#FFFFFF";  
+                        cxt.beginPath();  
+                        cxt.fillRect(0,0,640, 640);  
+                        cxt.closePath(); 
                         cxt.drawImage(img,0,0);
                     }
             }
