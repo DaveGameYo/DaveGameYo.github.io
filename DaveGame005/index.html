@@ -34,7 +34,7 @@
             imgs.src = "dave.jpg";
             imgs.onload = drawImg;//图片加载完成再执行
             function drawImg(){
-                cxt.drawImage(imgs,0,0, 300, 300);
+                cxt.drawImage(imgs,0,0, 600, 600);
             }
 
 
@@ -104,6 +104,8 @@
 </head>
 <body>
     <h1>Dave005 幫Dave 化妝吧 !!</h1>
+    <input type="file" name="testImg" id="testImg" />
+    <input type="button" id="chagneImg" value="換圖">
 <div id="dPallete"><div class="option active" style="background-color:red"></div>
 <div class="option" style="background-color:orange"></div>
 <div class="option" style="background-color:yellow"></div>
@@ -123,9 +125,41 @@
 <div class="option lw"><div style="margin-top: 6px; margin-left: 6px; width: 8px; height: 8px; background-color: red;"></div></div>
 <div class="option lw"><div style="margin-top: 5.5px; margin-left: 5.5px; width: 9px; height: 9px; background-color: red;"></div></div></div>
 <div id="dCanvas" >
-<canvas id="cSketchPad" width="300" height="300" style="border: 2px solid gray; position: relative; background:rgba(255,255,255,0)">
+<canvas id="cSketchPad" width="600px" height="600px" style="border: 2px solid gray; position: relative; background:rgba(255,255,255,0)">
 
 </canvas></div>
+<script>
+        var $canvas = $("#cSketchPad");
+            var cxt = $canvas[0].getContext("2d");
+    var fileinput = document.getElementById('testImg'); // input file
+    var img = new Image();
+
+    fileinput.onchange = function(evt) {
+        var files = evt.target.files; // FileList object
+        var file = files[0];
+        if(file.type.match('image.*')) {
+            var reader = new FileReader();
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(file);
+            reader.onload = function(evt){
+                if( evt.target.readyState == FileReader.DONE) {
+                    img.src = evt.target.result;
+
+                    img.onload = function(evt) {
+                        console.log('happy ', img.width, ' ', img.height)
+                        $canvas.width = img.width
+                        $canvas.height = img.height
+                        cxt.clearRect(0, 0, $canvas.width, $canvas.height);
+                        cxt.drawImage(img,0,0);
+                    }
+            }
+            }    
+
+        } else {
+            alert("not an image");
+        }
+    };
+</script>
 <input type="button" id="bGenImage" value="重置">
 <div id="dOutput" style="border: 2px solid gray; ></div>
 
